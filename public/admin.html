@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Paneli</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:#f5f5f5;
+      color:#111;
+    }
+
+    header{
+      background:#111;
+      color:#ffc400;
+      padding:25px;
+      text-align:center;
+      font-size:30px;
+      font-weight:bold;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:40px auto;
+      padding:0 20px;
+    }
+
+    .message{
+      background:#111;
+      color:white;
+      padding:25px;
+      border-radius:18px;
+      margin-bottom:20px;
+    }
+
+    .message strong{
+      color:#ffc400;
+    }
+
+    .message p{
+      margin:10px 0;
+      font-size:18px;
+    }
+
+    button{
+      background:#ffc400;
+      color:#111;
+      border:none;
+      padding:12px 20px;
+      border-radius:25px;
+      cursor:pointer;
+      font-weight:bold;
+      margin-top:10px;
+    }
+
+    .back{
+      display:inline-block;
+      margin-top:25px;
+      text-decoration:none;
+      font-weight:bold;
+      color:#111;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  ⚡ Elektrikçi Sinan Admin Paneli
+</header>
+
+<div class="container">
+
+  <div id="mesajListesi"></div>
+
+  <a href="/" class="back">
+    ← Siteye Dön
+  </a>
+
+</div>
+
+<script>
+
+async function mesajlariGetir(){
+
+  const cevap=await fetch("/mesajlar");
+
+  const mesajlar=await cevap.json();
+
+  let alan=document.getElementById("mesajListesi");
+
+  if(mesajlar.length===0){
+
+    alan.innerHTML="<h2>Henüz mesaj yok.</h2>";
+
+    return;
+  }
+
+  alan.innerHTML="";
+
+  mesajlar.forEach((m)=>{
+
+    alan.innerHTML+=`
+
+      <div class="message">
+
+        <p>
+          <strong>Ad Soyad:</strong>
+          ${m.ad}
+        </p>
+
+        <p>
+          <strong>Telefon:</strong>
+          ${m.telefon}
+        </p>
+
+        <p>
+          <strong>Mesaj:</strong>
+          ${m.mesaj}
+        </p>
+
+        <p>
+          <strong>Tarih:</strong>
+          ${m.tarih}
+        </p>
+
+        <button onclick="mesajSil(${m.id})">
+          Mesajı Sil
+        </button>
+
+      </div>
+
+    `;
+  });
+
+}
+
+async function mesajSil(id){
+
+  let onay=confirm("Mesaj silinsin mi?");
+
+  if(!onay) return;
+
+  await fetch("/mesaj-sil/"+id,{
+    method:"DELETE"
+  });
+
+  mesajlariGetir();
+}
+
+mesajlariGetir();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elektrikçi Sinan</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:#f5f5f5;
+      color:#111;
+    }
+
+    header{
+      position:fixed;
+      top:0;
+      width:100%;
+      z-index:1000;
+      background:#111;
+      padding:18px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      color:#ffc400;
+      font-size:28px;
+      font-weight:bold;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+      font-weight:bold;
+    }
+
+    .slider{
+      height:100vh;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .slide{
+      position:absolute;
+      width:100%;
+      height:100%;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      transition:1s;
+    }
+
+    .slide.active{
+      opacity:1;
+    }
+
+    .slide::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,0.7);
+    }
+
+    .hero{
+      position:absolute;
+      z-index:5;
+      top:50%;
+      left:8%;
+      transform:translateY(-50%);
+      color:white;
+      max-width:650px;
+      animation:giris 1s ease;
+    }
+
+    @keyframes giris{
+      from{
+        opacity:0;
+        transform:translate(-80px,-50%);
+      }
+      to{
+        opacity:1;
+        transform:translate(0,-50%);
+      }
+    }
+
+    .hero h1{
+      font-size:60px;
+      color:#ffc400;
+      margin-bottom:15px;
+    }
+
+    .hero h2{
+      font-size:32px;
+      margin-bottom:18px;
+    }
+
+    .hero p{
+      font-size:20px;
+      line-height:1.7;
+      margin-bottom:28px;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:15px 28px;
+      border-radius:30px;
+      text-decoration:none;
+      font-weight:bold;
+      margin-right:10px;
+    }
+
+    .call-btn{
+      background:#ffc400;
+      color:#111;
+    }
+
+    .wp-btn{
+      background:#25D366;
+      color:white;
+    }
+
+    section{
+      padding:80px 8%;
+    }
+
+    .title{
+      text-align:center;
+      font-size:36px;
+      margin-bottom:45px;
+    }
+
+    .emergency{
+      background:#ffc400;
+      text-align:center;
+    }
+
+    .emergency h2{
+      font-size:42px;
+      margin-bottom:15px;
+    }
+
+    .emergency p{
+      font-size:22px;
+      margin-bottom:25px;
+    }
+
+    .services{
+      background:white;
+    }
+
+    .service-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:25px;
+    }
+
+    .card{
+      background:#111;
+      color:white;
+      padding:35px;
+      border-radius:18px;
+      text-align:center;
+      transition:.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+    }
+
+    .card span{
+      font-size:45px;
+      color:#ffc400;
+    }
+
+    .card h3{
+      margin-top:15px;
+      font-size:22px;
+    }
+
+    .about{
+      background:#111;
+      color:white;
+      text-align:center;
+    }
+
+    .about h2{
+      color:#ffc400;
+    }
+
+    .about p{
+      max-width:850px;
+      margin:auto;
+      font-size:20px;
+      line-height:1.8;
+    }
+
+    .contact{
+      background:white;
+    }
+
+    .contact-container{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:30px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .info,
+    .form{
+      background:#111;
+      color:white;
+      padding:35px;
+      border-radius:18px;
+    }
+
+    .info h3,
+    .form h3{
+      color:#ffc400;
+      font-size:28px;
+      margin-bottom:20px;
+    }
+
+    .info p{
+      font-size:20px;
+      margin:14px 0;
+    }
+
+    .info a{
+      color:white;
+      text-decoration:none;
+    }
+
+    input,
+    textarea{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      margin-bottom:14px;
+      font-size:16px;
+    }
+
+    textarea{
+      resize:none;
+      height:120px;
+    }
+
+    button{
+      background:#ffc400;
+      color:#111;
+      border:none;
+      padding:14px 24px;
+      border-radius:30px;
+      font-weight:bold;
+      cursor:pointer;
+      font-size:16px;
+    }
+
+    footer{
+      background:#111;
+      color:white;
+      text-align:center;
+      padding:25px;
+    }
+
+    .floating{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background:#25D366;
+      color:white;
+      padding:15px 18px;
+      border-radius:50px;
+      text-decoration:none;
+      font-weight:bold;
+      z-index:999;
+    }
+
+    @media(max-width:768px){
+
+      header{
+        flex-direction:column;
+        gap:10px;
+      }
+
+      nav a{
+        margin:0 8px;
+        font-size:14px;
+      }
+
+      .hero h1{
+        font-size:42px;
+      }
+
+      .hero h2{
+        font-size:25px;
+      }
+
+      .contact-container{
+        grid-template-columns:1fr;
+      }
+
+      .btn{
+        display:block;
+        margin-bottom:12px;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚡ Elektrikçi Sinan</div>
+
+  <nav>
+    <a href="#hizmetler">Hizmetler</a>
+    <a href="#acil">7/24 Servis</a>
+    <a href="#iletisim">İletişim</a>
+    <a href="/admin.html">Admin</a>
+  </nav>
+</header>
+
+<div class="slider">
+
+  <div class="slide active"
+  style="background-image:url('https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?q=80&w=1600&auto=format&fit=crop')"></div>
+
+  <div class="slide"
+  style="background-image:url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?q=80&w=1600&auto=format&fit=crop')"></div>
+
+  <div class="slide"
+  style="background-image:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1600&auto=format&fit=crop')"></div>
+
+  <div class="hero">
+    <h1>Elektrikçi Sinan</h1>
+    <h2>Arıza • Bakım • Montaj</h2>
+
+    <p>
+      Altınoluk, Güre ve Küçükkuyu bölgelerinde
+      profesyonel elektrik hizmeti.
+    </p>
+
+    <a href="tel:05400932323" class="btn call-btn">
+      📞 Hemen Ara
+    </a>
+
+    <a href="https://wa.me/905400932323"
+    target="_blank"
+    class="btn wp-btn">
+      💬 WhatsApp
+    </a>
+  </div>
+
+</div>
+
+<section class="emergency" id="acil">
+
+  <h2>⚡ 7/24 Acil Elektrik Servisi</h2>
+
+  <p>
+    Elektrik arızalarında hızlı destek için hemen arayın.
+  </p>
+
+  <a href="tel:05400932323" class="btn call-btn">
+    0540 093 23 23
+  </a>
+
+</section>
+
+<section class="services" id="hizmetler">
+
+  <h2 class="title">Hizmetlerimiz</h2>
+
+  <div class="service-grid">
+
+    <div class="card">
+      <span>⚡</span>
+      <h3>Elektrik Arıza</h3>
+    </div>
+
+    <div class="card">
+      <span>📡</span>
+      <h3>Uydu Kurulumu</h3>
+    </div>
+
+    <div class="card">
+      <span>🚿</span>
+      <h3>Şofben Montajı</h3>
+    </div>
+
+    <div class="card">
+      <span>💡</span>
+      <h3>Avize Spot Montaj</h3>
+    </div>
+
+    <div class="card">
+      <span>🛠️</span>
+      <h3>Tadilat İşleri</h3>
+    </div>
+
+    <div class="card">
+      <span>🏠</span>
+      <h3>Korniş Montaj</h3>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="about">
+
+  <h2 class="title">Güven • Kalite • Çözüm</h2>
+
+  <p>
+    Elektrikçi Sinan olarak hızlı, güvenilir ve kaliteli
+    hizmet anlayışıyla Altınoluk, Güre ve Küçükkuyu
+    bölgelerinde profesyonel çözümler sunuyoruz.
+  </p>
+
+</section>
+
+<section class="contact" id="iletisim">
+
+  <h2 class="title">İletişim</h2>
+
+  <div class="contact-container">
+
+    <div class="info">
+
+      <h3>Bize Ulaşın</h3>
+
+      <p>
+        📞
+        <a href="tel:05400932323">
+          0540 093 23 23
+        </a>
+      </p>
+
+      <p>
+        📞
+        <a href="tel:05355751918">
+          0535 575 19 18
+        </a>
+      </p>
+
+      <p>📍 Altınoluk - Güre - Küçükkuyu</p>
+
+      <p>🕒 7/24 Acil Servis</p>
+
+    </div>
+
+    <div class="form">
+
+      <h3>Online İletişim Formu</h3>
+
+      <input type="text" id="ad" placeholder="Ad Soyad">
+
+      <input type="tel" id="telefon" placeholder="Telefon">
+
+      <textarea id="mesaj" placeholder="Mesajınız"></textarea>
+
+      <button onclick="formGonder()">
+        Mesaj Gönder
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+  © 2026 Elektrikçi Sinan | Tüm Hakları Saklıdır
+</footer>
+
+<a class="floating"
+href="https://wa.me/905400932323"
+target="_blank">
+  WhatsApp
+</a>
+
+<script>
+
+  let slides=document.querySelectorAll(".slide");
+  let index=0;
+
+  setInterval(()=>{
+
+    slides[index].classList.remove("active");
+
+    index=(index+1)%slides.length;
+
+    slides[index].classList.add("active");
+
+  },4000);
+
+  async function formGonder(){
+
+    let ad=document.getElementById("ad").value;
+    let telefon=document.getElementById("telefon").value;
+    let mesaj=document.getElementById("mesaj").value;
+
+    if(ad==="" || telefon==="" || mesaj===""){
+      alert("Lütfen tüm alanları doldurun.");
+      return;
+    }
+
+    const cevap=await fetch("/mesaj-gonder",{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        ad,
+        telefon,
+        mesaj
+      })
+
+    });
+
+    const sonuc=await cevap.json();
+
+    if(cevap.ok){
+
+      alert("Mesaj gönderildi.");
+
+      document.getElementById("ad").value="";
+      document.getElementById("telefon").value="";
+      document.getElementById("mesaj").value="";
+
+    }else{
+      alert(sonuc.hata);
+    }
+  }
+
+</script>
+
+</body>
+</html>
