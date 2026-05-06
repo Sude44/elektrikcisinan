@@ -6,7 +6,6 @@
   <title>Admin Paneli</title>
 
   <style>
-
     *{
       margin:0;
       padding:0;
@@ -60,6 +59,7 @@
       cursor:pointer;
       font-weight:bold;
       margin-top:10px;
+      margin-right:10px;
     }
 
     .back{
@@ -69,17 +69,24 @@
       font-weight:bold;
       color:#111;
     }
-
   </style>
 </head>
 
 <body>
+
+<script>
+  if(localStorage.getItem("admin") !== "true"){
+    window.location.href = "/login.html";
+  }
+</script>
 
 <header>
   ⚡ Elektrikçi Sinan Admin Paneli
 </header>
 
 <div class="container">
+
+  <button onclick="cikisYap()">Çıkış Yap</button>
 
   <div id="mesajListesi"></div>
 
@@ -90,76 +97,55 @@
 </div>
 
 <script>
-
 async function mesajlariGetir(){
 
-  const cevap=await fetch("/mesajlar");
+  const cevap = await fetch("/mesajlar");
+  const mesajlar = await cevap.json();
 
-  const mesajlar=await cevap.json();
+  let alan = document.getElementById("mesajListesi");
 
-  let alan=document.getElementById("mesajListesi");
-
-  if(mesajlar.length===0){
-
-    alan.innerHTML="<h2>Henüz mesaj yok.</h2>";
-
+  if(mesajlar.length === 0){
+    alan.innerHTML = "<h2>Henüz mesaj yok.</h2>";
     return;
   }
 
-  alan.innerHTML="";
+  alan.innerHTML = "";
 
   mesajlar.forEach((m)=>{
-
-    alan.innerHTML+=`
-
+    alan.innerHTML += `
       <div class="message">
-
-        <p>
-          <strong>Ad Soyad:</strong>
-          ${m.ad}
-        </p>
-
-        <p>
-          <strong>Telefon:</strong>
-          ${m.telefon}
-        </p>
-
-        <p>
-          <strong>Mesaj:</strong>
-          ${m.mesaj}
-        </p>
-
-        <p>
-          <strong>Tarih:</strong>
-          ${m.tarih}
-        </p>
+        <p><strong>Ad Soyad:</strong> ${m.ad}</p>
+        <p><strong>Telefon:</strong> ${m.telefon}</p>
+        <p><strong>Mesaj:</strong> ${m.mesaj}</p>
+        <p><strong>Tarih:</strong> ${m.tarih}</p>
 
         <button onclick="mesajSil(${m.id})">
           Mesajı Sil
         </button>
-
       </div>
-
     `;
   });
-
 }
 
 async function mesajSil(id){
 
-  let onay=confirm("Mesaj silinsin mi?");
+  let onay = confirm("Mesaj silinsin mi?");
 
   if(!onay) return;
 
-  await fetch("/mesaj-sil/"+id,{
+  await fetch("/mesaj-sil/" + id, {
     method:"DELETE"
   });
 
   mesajlariGetir();
 }
 
-mesajlariGetir();
+function cikisYap(){
+  localStorage.removeItem("admin");
+  window.location.href = "/login.html";
+}
 
+mesajlariGetir();
 </script>
 
 </body>

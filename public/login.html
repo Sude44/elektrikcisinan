@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Giriş</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#111;
+    font-family:Arial;
+}
+
+.login-box{
+    background:#222;
+    padding:40px;
+    border-radius:15px;
+    width:300px;
+    text-align:center;
+}
+
+h1{
+    color:#ffcc00;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    border:none;
+    border-radius:8px;
+    background:#ffcc00;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+p{
+    color:red;
+}
+</style>
+
+</head>
+<body>
+
+<div class="login-box">
+
+<h1>Admin Giriş</h1>
+
+<input type="text" id="username" placeholder="Kullanıcı Adı">
+
+<input type="password" id="password" placeholder="Şifre">
+
+<button onclick="login()">Giriş Yap</button>
+
+<p id="hata"></p>
+
+</div>
+
+<script>
+
+function login(){
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if(username === "admin" && password === "Sinan10233544Sude"){
+
+        localStorage.setItem("admin","true");
+
+        window.location.href = "/admin.html";
+
+    }else{
+
+        document.getElementById("hata").innerText =
+        "Hatalı giriş";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
