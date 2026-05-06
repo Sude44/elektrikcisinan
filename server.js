@@ -1,5 +1,5 @@
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+const Database = require("better-sqlite3");
 const path = require("path");
 
 const app = express();
@@ -8,9 +8,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const db = new sqlite3.Database("database.db");
+const db = new Database("database.db");
 
-db.run(`
+db.prepare(`
   CREATE TABLE IF NOT EXISTS mesajlar (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ad TEXT NOT NULL,
@@ -18,7 +18,7 @@ db.run(`
     mesaj TEXT NOT NULL,
     tarih TEXT NOT NULL
   )
-`);
+`).run();
 
 app.post("/mesaj-gonder", (req, res) => {
   const { ad, telefon, mesaj } = req.body;
@@ -28,41 +28,40 @@ app.post("/mesaj-gonder", (req, res) => {
     return res.status(400).json({ hata: "Tüm alanlar zorunludur." });
   }
 
-  db.run(
-    "INSERT INTO mesajlar (ad, telefon, mesaj, tarih) VALUES (?, ?, ?, ?)",
-    [ad, telefon, mesaj, tarih],
-    function (err) {
-      if (err) {
-        return res.status(500).json({ hata: "Veritabanı hatası." });
-      }
+  try {
+    db.prepare(
+      "INSERT INTO mesajlar (ad, telefon, mesaj, tarih) VALUES (?, ?, ?, ?)"
+    ).run(ad, telefon, mesaj, tarih);
 
-      res.json({ mesaj: "Mesaj başarıyla kaydedildi." });
-    }
-  );
+    res.json({ mesaj: "Mesaj başarıyla kaydedildi." });
+  } catch (err) {
+    res.status(500).json({ hata: "Veritabanı hatası." });
+  }
 });
 
 app.get("/mesajlar", (req, res) => {
-  db.all("SELECT * FROM mesajlar ORDER BY id DESC", [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ hata: "Mesajlar alınamadı." });
-    }
+  try {
+    const mesajlar = db
+      .prepare("SELECT * FROM mesajlar ORDER BY id DESC")
+      .all();
 
-    res.json(rows);
-  });
+    res.json(mesajlar);
+  } catch (err) {
+    res.status(500).json({ hata: "Mesajlar alınamadı." });
+  }
 });
 
 app.delete("/mesaj-sil/:id", (req, res) => {
   const id = req.params.id;
 
-  db.run("DELETE FROM mesajlar WHERE id = ?", [id], function (err) {
-    if (err) {
-      return res.status(500).json({ hata: "Mesaj silinemedi." });
-    }
-
+  try {
+    db.prepare("DELETE FROM mesajlar WHERE id = ?").run(id);
     res.json({ mesaj: "Mesaj silindi." });
-  });
+  } catch (err) {
+    res.status(500).json({ hata: "Mesaj silinemedi." });
+  }
 });
 
 app.listen(PORT, () => {
-  console.log(`Site çalışıyor: http://localhost:${PORT}`);
+  console.log(`Site çalışıyor. Port: ${PORT}`);
 });
